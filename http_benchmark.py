@@ -39,6 +39,8 @@ class HTTPBenchmark:
         Reset the results of the test
         """
         self.results =  {
+                'start_time': None,
+                'end_time': None,
                 'total_requests': 0,
                 'successful_requests': 0,
                 'failed_requests': 0,
@@ -63,31 +65,56 @@ class HTTPBenchmark:
         Pretty print the results of the test
         Print in tabular format:
         -------
-        | URL: {self.url} |
+        | Config: |
         -------
-        | Num Requests: {self.results['total_requests']} |
+        |   URL: http://example.com |
         -------
-        | Num Successful Requests: {self.results['successful_requests']} |
+        |   QPS: 10 |
         -------
-        | Num Failed Requests: {self.results['failed_requests']} |
+        |   Timeout: 10 seconds |
         -------
-        | Average Latency (ms): {self.results['latencies']} |
+        | Results: |
         -------
-        | Top {min(3, len(self.results['error_code_count']))} Error Codes: {self.results['error_code_count']} |
+        |   Duration: 10 seconds |
+        -------
+        |   Num Requests: 100 |
+        -------
+        |   Num Successful Requests: 90 |
+        -------
+        |   Num Failed Requests: 10 |
+        -------
+        |   % Successful Requests: 90.0 |
+        -------
+        |   Average Latency (ms): 100.0 |
+        -------
+        | Top 3 Error Codes: |
+        -------
+        |   404: 5 |
+        -------
+        |   Timeout: 3 |
         -------
         """
         
         ret_parts = [
-            f"URL: {self.url}",
-            f"Num Requests: {self.results['total_requests']}",
-            f"Num Successful Requests: {self.results['successful_requests']}",
-            f"Num Failed Requests: {self.results['failed_requests']}",
-            f"Average Latency (ms): {round(sum(self.results['latencies'])/len(self.results['latencies'])*1000,2) if self.results['latencies'] else None}"
+            "Config:",
+            f"  URL: {self.url}",
+            f"  QPS: {self.qps}",
+            f"  Timeout: {self.timeout} seconds",
+            "Results:",
+            f"  Duration: {round(self.results['end_time'] - self.results['start_time'],1)} seconds",
+            f"  Num Requests: {self.results['total_requests']}",
+            f"  Num Successful Requests: {self.results['successful_requests']}",
+            f"  Num Failed Requests: {self.results['failed_requests']}",
+            f"  % Successful Requests: {round(self.results['successful_requests']/self.results['total_requests']*100,2) if self.results['total_requests'] else None}",
+            f"  Average Latency (ms): {round(sum(self.results['latencies'])/len(self.results['latencies'])*1000,2) if self.results['latencies'] else None}"
         ]
         # Add optional error code count if present
         if self.results['error_code_count']:
-            ret_parts.append(f"Top {min(3, len(self.results['error_code_count']))} Error Codes: " + 
-                             str({code: count for code, count in sorted(self.results['error_code_count'].items(), key=lambda x: x[1], reverse=True)[:3]}))
+            top_k = min(3, len(self.results['error_code_count']))
+            ret_parts.append(f"Top Errors:")
+            sorted_error_codes = sorted(self.results['error_code_count'].items(), key=lambda x: x[1], reverse=True)[:top_k]
+            for code, count in sorted_error_codes:
+                ret_parts.append(f"  {code}: {count}")
 
         # Use max_len of parts to format the output table's length
         max_len = max(len(part) for part in ret_parts)
@@ -139,18 +166,17 @@ class HTTPBenchmark:
         interval = 1 / self.qps  # Interval to maintain requests per second
 
         async with aiohttp.ClientSession() as session:
-            start_time = time.time()
-            for i in range(total_requests):
-                if time.time() - start_time < duration:
-                    task = asyncio.create_task(self.send_request(session, self.url, self.timeout))
-                    tasks.append(task)
-                    await asyncio.sleep(interval)  # Wait for the next request slot
-                else:
-                    break  # Stop if the duration is exceeded
+            self.results['start_time'] = start_time = time.time()
+            while time.time() - start_time <= duration:
+                task = asyncio.create_task(self.send_request(session, self.url, self.timeout))
+                tasks.append(task)
+                await asyncio.sleep(interval)  # Wait for the next request slot
+            self.results['end_time'] = time.time()
 
             results = await asyncio.gather(*tasks, return_exceptions=True)  # Wait for all tasks to complete
 
         # Update the results
+        
         self.results['total_requests'] = len(results)
         self.results['successful_requests'] = sum(1 for _, status in results if status == 200)
         self.results['failed_requests'] = len(results) - self.results['successful_requests']
