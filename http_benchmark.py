@@ -43,7 +43,7 @@ class HTTPBenchmark:
         self.qps = qps 
         self.timeout = timeout
         # Tests to ensure the URL is valid
-        self.__test_url__(url)
+        self.__test_url__(self.url)
         # Asserts to ensure QPS and Timeout are positive integers
         assert qps > 0, "QPS must be a positive integer"
         assert timeout > 0, "Timeout must be a positive integer"
@@ -155,6 +155,24 @@ class HTTPBenchmark:
         table = line_sep + line_sep.join(table_lines) + line_sep
 
         print(table)
+
+    def get_results(self) -> list:
+        """
+        Return the results of the test as list
+        """
+        result = [self.url, # URL
+                  self.qps, # QPS
+                  self.timeout, # Timeout
+                  self.results['end_time'] - self.results['start_time'], # Duration
+                  self.results['total_requests'], # Num Requests
+                  self.results['successful_requests'], # Num Successful Requests
+                  self.results['failed_requests'], # Num Failed Requests
+                  round(self.results['successful_requests']/self.results['total_requests']*100, 2) if self.results['total_requests'] else None, # % Successful Requests
+                  round(sum(self.results['latencies'])/len(self.results['latencies'])*1000, 2) if self.results['latencies'] else None, # Average Latency (ms)
+                  self.results['error_code_count'], # Error Code Count
+                  sorted(self.results['error_code_count'].items(), key=lambda x: x[1], reverse=True)[:min(3, len(self.results['error_code_count']))] if self.results['error_code_count'] else None # Top Errors
+                ]
+        return result
 
     async def send_request(self, session: aiohttp.ClientSession, url: str, timeout: int=10) -> tuple:
         """
