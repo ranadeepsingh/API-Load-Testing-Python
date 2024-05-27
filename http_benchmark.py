@@ -111,7 +111,7 @@ class HTTPBenchmark:
         -------
         |   Num Failed Requests: 10 |
         -------
-        |   % Successful Requests: 90.0 |
+        |   Error Rate: 90.0 % |
         -------
         |   Average Latency (ms): 100.0 |
         -------
@@ -122,7 +122,7 @@ class HTTPBenchmark:
         |   Timeout: 3 |
         -------
         """
-        
+
         ret_parts = [
             "Config:",
             f"  URL: {self.url}",
@@ -134,11 +134,11 @@ class HTTPBenchmark:
             f"  Num Requests: {self.results['total_requests']}",
             f"  Num Successful Requests: {self.results['successful_requests']}",
             f"  Num Failed Requests: {self.results['failed_requests']}",
-            f"  % Successful Requests: {round(self.results['successful_requests']/self.results['total_requests']*100,2) if self.results['total_requests'] else None}",
+            f"  Error Rate: {round(self.results['failed_requests']/self.results['total_requests']*100,2) if self.results['total_requests'] else None}",
             f"  Average Latency (ms): {round(sum(self.results['latencies'])/len(self.results['latencies'])*1000,2) if self.results['latencies'] else None}"
         ]
         # Add optional error code count if present
-        if self.results['error_code_count']:
+        if len(self.results['error_code_count']):
             top_k = min(3, len(self.results['error_code_count']))
             ret_parts.append(f"Top Errors:")
             sorted_error_codes = sorted(self.results['error_code_count'].items(), key=lambda x: x[1], reverse=True)[:top_k]
@@ -163,13 +163,14 @@ class HTTPBenchmark:
         result = [self.url, # URL
                   self.qps, # QPS
                   self.timeout, # Timeout
-                  self.results['end_time'] - self.results['start_time'], # Duration
+                  round(self.results['end_time'] - self.results['start_time'],1), # Duration
+                  round(self.results['total_requests']/(self.results['end_time'] - self.results['start_time']),2), # Achived QPS
                   self.results['total_requests'], # Num Requests
                   self.results['successful_requests'], # Num Successful Requests
                   self.results['failed_requests'], # Num Failed Requests
-                  round(self.results['successful_requests']/self.results['total_requests']*100, 2) if self.results['total_requests'] else None, # % Successful Requests
+                  round(self.results['successful_requests']/self.results['total_requests']*100, 2) if self.results['total_requests'] else None, # Error Rate
                   round(sum(self.results['latencies'])/len(self.results['latencies'])*1000, 2) if self.results['latencies'] else None, # Average Latency (ms)
-                  self.results['error_code_count'], # Error Code Count
+                  len(self.results['error_code_count']), # Error Code Count
                   sorted(self.results['error_code_count'].items(), key=lambda x: x[1], reverse=True)[:min(3, len(self.results['error_code_count']))] if self.results['error_code_count'] else None # Top Errors
                 ]
         return result
