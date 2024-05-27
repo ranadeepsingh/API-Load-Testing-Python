@@ -7,11 +7,20 @@ Author: Ranadeep Singh
 Email: ranadeep.dtu@gmail.com
 """
 
-import argparse
+from collections import Counter
 import time
+
+# To pass command line arguments
+import argparse
+
+# Send HTTP/HTTPS requests
+import requests
+
+# Async HTTP/HTTPS requests
 import asyncio
 import aiohttp
-from collections import Counter
+
+
 
 class HTTPBenchmark:
     """
@@ -26,12 +35,19 @@ class HTTPBenchmark:
         - qps: The number of requests per second to send. Default: 10
         - timeout: The timeout duration of each request in seconds. Default: 10
         """
+
         self.url = url
         # If url does not start with http:// or https://, add http://
         if not self.url.startswith('http://') and not self.url.startswith('https://'):
             self.url = 'http://' + self.url
         self.qps = qps 
         self.timeout = timeout
+        # Tests to ensure the URL is valid
+        self.__test_url__(url)
+        # Asserts to ensure QPS and Timeout are positive integers
+        assert qps > 0, "QPS must be a positive integer"
+        assert timeout > 0, "Timeout must be a positive integer"
+        
         self.__reset_results__()
 
     def __reset_results__(self) -> None:
@@ -47,6 +63,16 @@ class HTTPBenchmark:
                 'latencies': [],
                 'error_code_count': {}, # Error code and their counts, if any
             }
+        
+    def __test_url__(self, url) -> None:
+        """
+        Test the URL to ensure it is valid
+        """
+        try:
+            response = requests.head(url)
+            response.raise_for_status()
+        except Exception as e:
+            raise f"Invalid URL: {str(e)}"
 
     def __str__(self) -> str:
         """
@@ -77,6 +103,8 @@ class HTTPBenchmark:
         -------
         |   Duration: 10 seconds |
         -------
+        |   Achived QPS: 10.0 |
+        -------
         |   Num Requests: 100 |
         -------
         |   Num Successful Requests: 90 |
@@ -102,6 +130,7 @@ class HTTPBenchmark:
             f"  Timeout: {self.timeout} seconds",
             "Results:",
             f"  Duration: {round(self.results['end_time'] - self.results['start_time'],1)} seconds",
+            f"  Achived QPS: {round(self.results['total_requests']/(self.results['end_time'] - self.results['start_time']),2)}",
             f"  Num Requests: {self.results['total_requests']}",
             f"  Num Successful Requests: {self.results['successful_requests']}",
             f"  Num Failed Requests: {self.results['failed_requests']}",
@@ -190,6 +219,9 @@ class HTTPBenchmark:
         - duration: The duration of the test in seconds
         - verbose: Whether to print the results
         """
+        # Asserts to ensure duration is a positive integers
+        assert duration > 0, "Duration must be a positive integer"
+
         self.__reset_results__()
         asyncio.run(self.load_test(duration))
 
