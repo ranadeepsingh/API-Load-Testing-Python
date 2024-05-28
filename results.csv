@@ -1,0 +1,41 @@
+URL,QPS,Timeout,Duration,Actual QPS,Num Requests,Num Successful,Num Failed,Error Rate %,Average Latency (ms),Max Latency (ms),Min Latency (ms),Error Count,Top Errors
+http://fireworks.ai,1,10,5.0,1.0,5,5,0,0.0,5061.41,5646.83,4232.76,0,None
+http://vercel.com,1,10,5.0,1.0,5,5,0,0.0,258.61,354.62,218.77,0,None
+http://cupidgpt.ai,1,10,5.0,1.0,5,5,0,0.0,177.47,316.31,98.06,0,None
+http://fireworks.ai,1,10,30.0,1.0,30,30,0,0.0,4042.9,5749.17,2983.73,0,None
+http://vercel.com,1,10,30.0,1.0,30,30,0,0.0,189.17,355.54,136.04,0,None
+http://cupidgpt.ai,1,10,30.0,1.0,30,30,0,0.0,126.41,287.77,95.79,0,None
+http://fireworks.ai,1,10,60.1,1.0,60,60,0,0.0,3862.24,5295.88,3412.92,0,None
+http://vercel.com,1,10,60.2,1.0,60,60,0,0.0,220.64,733.47,134.8,0,None
+http://cupidgpt.ai,1,10,60.1,1.0,60,60,0,0.0,135.08,440.0,94.76,0,None
+http://fireworks.ai,1,60,5.0,1.0,5,5,0,0.0,4842.08,5679.57,4181.04,0,None
+http://vercel.com,1,60,5.0,1.0,5,5,0,0.0,331.72,490.18,241.64,0,None
+http://cupidgpt.ai,1,60,5.0,1.0,5,5,0,0.0,148.98,251.98,109.49,0,None
+http://fireworks.ai,1,60,30.0,1.0,30,30,0,0.0,3946.55,5075.11,2819.09,0,None
+http://vercel.com,1,60,30.0,1.0,30,30,0,0.0,210.5,374.14,155.62,0,None
+http://cupidgpt.ai,1,60,30.0,1.0,30,30,0,0.0,126.47,259.98,93.65,0,None
+http://fireworks.ai,1,60,60.1,1.0,60,60,0,0.0,3779.23,6104.14,2614.4,0,None
+http://vercel.com,1,60,60.1,1.0,60,60,0,0.0,183.77,458.23,126.96,0,None
+http://cupidgpt.ai,1,60,60.1,1.0,60,60,0,0.0,118.56,466.28,92.66,0,None
+http://fireworks.ai,10,10,5.0,9.91,50,31,19,38.0,7256.5,10859.39,3963.11,1,[('Timeout', 19)]
+http://vercel.com,10,10,5.0,9.93,50,50,0,0.0,239.51,705.38,155.99,0,None
+http://cupidgpt.ai,10,10,5.0,9.91,50,50,0,0.0,131.6,606.99,88.7,0,None
+http://fireworks.ai,10,10,30.0,9.92,298,21,277,92.95,6712.18,10894.02,3927.3,1,[('Timeout', 277)]
+http://vercel.com,10,10,30.0,9.9,297,246,51,17.17,168.99,599.44,112.43,2,[("ClientError: Cannot connect to host vercel.com:80 ssl:default [Connect call failed ('76.76.21.98', 80)]", 27), ("ClientError: Cannot connect to host vercel.com:80 ssl:default [Connect call failed ('76.76.21.241', 80)]", 24)]
+http://cupidgpt.ai,10,10,30.0,9.92,298,298,0,0.0,115.08,450.74,83.84,0,None
+http://fireworks.ai,10,10,60.0,9.9,594,18,576,96.97,6669.81,10550.82,3777.3,1,[('Timeout', 576)]
+http://vercel.com,10,10,60.0,9.9,594,377,217,36.53,189.85,673.67,116.43,3,[("ClientError: Cannot connect to host vercel.com:80 ssl:default [Connect call failed ('76.76.21.98', 80)]", 111), ("ClientError: Cannot connect to host vercel.com:80 ssl:default [Connect call failed ('76.76.21.241', 80)]", 105), ("ClientError: Cannot connect to host vercel.com:443 ssl:default [Connect call failed ('76.76.21.241', 443)]", 1)]
+http://cupidgpt.ai,10,10,60.0,9.91,595,595,0,0.0,109.73,567.01,79.07,0,None
+http://fireworks.ai,10,60,5.0,9.92,50,50,0,0.0,9320.78,13360.03,3303.56,0,None
+http://vercel.com,10,60,5.0,9.93,50,50,0,0.0,235.73,454.34,177.79,0,None
+http://cupidgpt.ai,10,60,5.0,9.91,50,50,0,0.0,162.24,661.43,89.35,0,None
+http://fireworks.ai,10,60,30.1,9.91,298,285,13,4.36,39429.53,59680.79,3802.85,1,[('Timeout', 13)]
+http://vercel.com,10,60,30.0,9.9,297,297,0,0.0,188.7,533.94,114.86,0,None
+http://cupidgpt.ai,10,60,30.1,9.91,298,298,0,0.0,103.41,295.38,78.86,0,None
+http://fireworks.ai,10,60,60.1,9.91,595,246,349,58.66,37313.99,60600.21,3585.11,1,[('Timeout', 349)]
+http://vercel.com,10,60,60.0,9.89,594,367,227,38.22,397.78,3795.44,114.85,6,[("ClientError: Cannot connect to host vercel.com:80 ssl:default [Connect call failed ('76.76.21.164', 80)]", 114), ("ClientError: Cannot connect to host vercel.com:80 ssl:default [Connect call failed ('76.76.21.22', 80)]", 107), ("ClientError: Cannot connect to host vercel.com:443 ssl:default [Connect call failed ('76.76.21.164', 443)]", 2)]
+http://cupidgpt.ai,10,60,60.0,9.91,595,595,0,0.0,123.63,588.48,82.15,0,None
+http://fireworks.ai,100,10,5.0,90.95,455,3,452,99.34,5360.15,8645.47,3510.03,1,[('Timeout', 452)]
+http://vercel.com,100,10,5.0,91.54,458,56,402,87.77,1793.84,2915.63,485.84,4,[("ClientError: Cannot connect to host vercel.com:80 ssl:default [Connect call failed ('76.76.21.22', 80)]", 197), ("ClientError: Cannot connect to host vercel.com:80 ssl:default [Connect call failed ('76.76.21.164', 80)]", 196), ("ClientError: Cannot connect to host vercel.com:443 ssl:default [Connect call failed ('76.76.21.164', 443)]", 5)]
+http://cupidgpt.ai,100,10,5.0,92.35,462,462,0,0.0,190.01,1189.78,92.23,0,None
+http://fireworks.ai,100,10,30.0,89.29,2679,2,2677,99.93,4183.95,4203.62,4164.28,1,[('Timeout', 2677)]
