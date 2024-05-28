@@ -1,7 +1,6 @@
 ## About
 HTTP load-testing and benchmarking library for testing the performance of a given URL. The library generates requests at a given fixed QPS and reports latencies, error rates, and common errors.
 
-
 **Output Example:**
 ```bash
 docker run -it --name http-benchmark --rm http-benchmark python http_benchmark.py --url fireworks.ai --qps 100 --timeout 20 --duration 10
@@ -10,7 +9,36 @@ docker run -it --name http-benchmark --rm http-benchmark python http_benchmark.p
 
 ## Setup
 
-### Docker Setup
+### Docker Compose Setup
+1. Start Docker Desktop/Docker Daemon \
+Optional: [Install Docker Desktop](https://www.docker.com/get-started/)
+2. Self Sign SSL Certificate to test HTTPS
+```bash
+mkdir -p certs
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout certs/nginx.key -out certs/nginx.crt -subj "/CN=localhost"
+```
+
+3. Use Python heklper script to run benchmarking with N number of load-balanced docker containers
+```bash
+python scalabale_http_benchmark.py --nodes 4
+```
+
+*Alternatively*, you can use the run 
+3. Build Docker Compose
+```bash
+docker-compose build
+```
+3. Run Docker Compose with default params
+```bash
+docker-compose up
+```
+4. Run Docker Compose with custom params
+```bash
+docker-compose run http-benchmark python http_benchmark.py --url fireworks.ai --qps 100 --timeout 20 --duration 10
+```
+
+
+### Individual Docker Setup
 1. Start Docker Desktop/Docker Daemon \
 Optional: [Install Docker Desktop](https://www.docker.com/get-started/)
 
@@ -52,6 +80,12 @@ python http_benchmark.py --url fireworks.ai --qps 100 --timeout 20 --duration 10
 ## File Structure
 1. `http_benchmark.py`: Main file to run the load testing and contains the HTTPBenchmark class
 2. `Dockerfile`: Dockerfile to build the docker image
+
+## Future Improvements
+1. Add observability metrics support though Prometheus and Grafana
+2. Add support for custom headers and body in the request
+3. Write lower level code in C++/Go for better load testing performance
+
 
 ## By
 - Author: Ranadeep Singh

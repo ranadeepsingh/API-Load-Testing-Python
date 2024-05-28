@@ -138,7 +138,7 @@ class HTTPBenchmark:
             f"  Num Requests: {self.results['total_requests']}",
             f"  Num Successful: {self.results['successful_requests']}",
             f"  Num Failed: {self.results['failed_requests']}",
-            f"  Error Rate: {round(self.results['failed_requests']/self.results['total_requests']*100,2) if self.results['total_requests'] else None}",
+            f"  Error Rate: {round(self.results['failed_requests']/self.results['total_requests']*100,2) if self.results['total_requests'] else None} %",
             f"  Average Latency (ms): {round(sum(self.results['latencies'])/len(self.results['latencies'])*1000,2) if self.results['latencies'] else None}",
             f"  Max Latency (ms): {round(max(self.results['latencies'])*1000, 2) if self.results['latencies'] else None}",
             f"  Min Latency (ms): {round(min(self.results['latencies'])*1000, 2) if self.results['latencies'] else None}",

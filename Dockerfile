@@ -21,4 +21,4 @@ EXPOSE 80 443
 USER app_user
 
 # Run http_benchmark.py -u fireworks.ai -q 500 -t 10 -d 2 when the container launches
-CMD ["python", "http_benchmark.py", "-u", "fireworks.ai", "-q", "500", "-t", "10", "-d", "2"]
+CMD ["python", "http_benchmark.py", "-u", "https://cupidgpt.ai", "-q", "500", "-t", "10", "-d", "2"]
