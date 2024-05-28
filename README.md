@@ -80,6 +80,10 @@ python http_benchmark.py --url fireworks.ai --qps 100 --timeout 20 --duration 10
 ## File Structure
 1. `http_benchmark.py`: Main file to run the load testing and contains the HTTPBenchmark class
 2. `Dockerfile`: Dockerfile to build the docker image
+3. `docker-compose.yml`: Docker Compose file to run the benchmarking with multiple containers
+4. `scalabale_http_benchmark.py`: Python helper script to run benchmarking with N number of load-balanced docker containers
+5. `requirements.txt`: Python dependencies
+6. `results.csv`: CSV file to store the results of the benchmarking
 
 ## Future Improvements
 1. Add observability metrics support though Prometheus and Grafana
